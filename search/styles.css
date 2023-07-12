@@ -1,4 +1,4 @@
-body, head {
+body {
     font-family: sans-serif;
 } 
 
@@ -11,4 +11,12 @@ h1 {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.search-box {
+    border-radius: 25px;
+    border: 2px solid grey;
+    padding: 20px;
+    width: 200px;
+    height: 50px;
 }
