@@ -12,21 +12,20 @@
     <body>
         <div class="container">
             <div class="row mt-3">
-                <div class="btn-group">
-                    <a href="./index.html" class="btn btn-primary active" aria-current="page">Search</a>
+                <div class="btn-group position-absolute top-0 end-0 mt-3" style="width: 20%">
                     <a href="./image_search.html" class="btn btn-primary">Image search</a>
                     <a href="./advanced_search.html" class="btn btn-primary">Advanced search</a>
                 </div>
             </div>
-
-            <div class="text-center row mt-3">
-                <h1>Search</h1>
+            
+            <div class="text-center row mt-5 pt-5">
+                <h1 class="fw-bold">Search</h1>
             </div>
 
             <div class="row mt-3">
                 <form class="form"  action="https://google.com/search">
-                    <input type="text" name="q" class="form-control">
-                    <input type="submit mx-auto" class="btn btn-success" value="Google Search">
+                    <input type="text" name="q" class="form-control centered" placeholder="Query" style="width: 75%">
+                    <input type="submit" class="btn btn-success centered mt-3" value="Google Search">
                 </form>
             </div>
         </div>

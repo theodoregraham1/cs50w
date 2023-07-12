@@ -3,5 +3,12 @@ body, head {
 } 
 
 h1 {
-    font-size: xxx-large;
+    font-size: 100px;
+    color: red;
+}
+
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
