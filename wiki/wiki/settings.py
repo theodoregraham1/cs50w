@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CSRF_TRUSTED_ORIGINS = ["https://theodoregraham1-fictional-guide-r9gvpx4qxj9c4j6-8000.preview.app.github.dev"]
 
 # Application definition
 
