@@ -1,23 +1,54 @@
 import markdown2
 
-from django.forms import Form, CharField
+from django.forms import Form, CharField, widgets
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
 from . import util
- 
+
 
 class SearchForm(Form):
     q = CharField()
+
+class NewEntryForm(Form):
+    title = CharField(widget=widgets.TextInput(
+        attrs={'placeholder': 'Title',
+               'style': 'width: 80%'}
+        ),
+        label="")
+    content = CharField(widget=widgets.Textarea(
+        attrs={'rows': '3',
+               'placeholder': 'Content',}
+        ),
+        label="")
 
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(),
-        "form": SearchForm()
     })
 
+
+def add(request):
+
+    if request.method == "GET":
+        return render(request, "encyclopedia/add.html", {
+            "form": NewEntryForm
+        })
+    
+    form = NewEntryForm(request.POST)
+
+    if form.is_valid():
+        title = form.cleaned_data["title"]
+        content = form.cleaned_data["content"]
+
+        if title in util.list_entries():
+            return(HttpResponse("<h1>Error 500: Entry name already exists</h1>"))
+        
+        util.save_entry(title, content)
+
+        return HttpResponseRedirect(reverse("wiki", args=[title]))
 
 def search(request):
 
@@ -45,6 +76,8 @@ def search(request):
             "results": results
         })
     
+    return HttpResponseRedirect(reverse("index"))
+    
 
 def wiki(request, title):
     entry = util.get_entry(title)
@@ -56,5 +89,4 @@ def wiki(request, title):
     return render(request, "encyclopedia/entry.html", {
         "title": title,
         "entry": markdown2.markdown(entry),
-        "form": SearchForm()
     })
