@@ -21,24 +21,29 @@ def index(request):
 
 def search(request):
 
-    if request.method == "POST":
-
-        form = SearchForm(request.POST)
-
-        if form.is_valid():
-            query = form.cleaned_data["q"]
-
-            entries = util.list_entries()
-
-            if query in entries:
-                return HttpResponseRedirect(reverse("wiki", entry))
-
-            return render(request, "encyclopedia/search.html", {
-                "results": entries
-            })
-
-    else:
+    if request.method == "GET":
         return HttpResponseRedirect(reverse("index"))
+
+    form = SearchForm(request.POST)
+
+    if form.is_valid():
+        query = form.cleaned_data["q"]
+
+        entries = util.list_entries()
+
+        # If query is a direct match, go to that page
+        if query in entries:
+            return HttpResponseRedirect(reverse("wiki", args=[query]))
+        
+        # Check all entries for the query as a substrings
+        results = []
+        for entry in entries:
+            if query in entry:
+                results.append(entry)
+
+        return render(request, "encyclopedia/search.html", {
+            "results": results
+        })
     
 
 def wiki(request, title):
