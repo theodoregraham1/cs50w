@@ -8,6 +8,13 @@ from django.urls import reverse
 from . import util
 
 
+class EditForm(Form):
+    content = CharField(widget=widgets.Textarea(
+        attrs={'rows': '3',
+               'placeholder': 'Content',}
+        ),
+        label="") 
+
 class SearchForm(Form):
     q = CharField()
 
@@ -50,6 +57,16 @@ def add(request):
 
         return HttpResponseRedirect(reverse("wiki", args=[title]))
 
+
+def edit(request, title):
+
+    if request.method == "GET":
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "form": EditForm,
+        })
+
+
 def search(request):
 
     if request.method == "GET":
@@ -82,7 +99,7 @@ def search(request):
 def wiki(request, title):
     entry = util.get_entry(title)
 
-    # If entry returns none then it doesn't exist
+    # If get_entry returns none then it doesn't exist
     if not entry:
         return HttpResponse("<h1>Error 404: Entry not found</h1>")
 
