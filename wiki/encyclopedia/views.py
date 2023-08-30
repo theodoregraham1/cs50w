@@ -9,22 +9,23 @@ from . import util
 
 
 class EditForm(Form):
-    content = CharField(widget=widgets.Textarea(
-        attrs={'rows': '3',
-               'placeholder': 'Content',}
-        ),
-        label="") 
+    content = CharField(
+        widget=widgets.Textarea(),
+        label="",
+        ) 
 
 class SearchForm(Form):
     q = CharField()
 
 class NewEntryForm(Form):
-    title = CharField(widget=widgets.TextInput(
+    title = CharField(
+        widget=widgets.TextInput(
         attrs={'placeholder': 'Title',
                'style': 'width: 80%'}
         ),
         label="")
-    content = CharField(widget=widgets.Textarea(
+    content = CharField(
+        widget=widgets.Textarea(
         attrs={'rows': '3',
                'placeholder': 'Content',}
         ),
@@ -48,7 +49,7 @@ def add(request):
 
     if form.is_valid():
         title = form.cleaned_data["title"]
-        content = form.cleaned_data["content"]
+        content = form.cleaned_data["content"].encode()
 
         if title in util.list_entries():
             return(HttpResponse("<h1>Error 500: Entry name already exists</h1>"))
@@ -57,14 +58,35 @@ def add(request):
 
         return HttpResponseRedirect(reverse("wiki", args=[title]))
 
+    return HttpResponse("<h1>Error 500: Form invalid</h1>")
+
 
 def edit(request, title):
 
+    # Render edit page with entry data pre-loaded
     if request.method == "GET":
+        entry = util.get_entry(title)
+
+        # Ensure entry exists
+        if not entry:
+            return HttpResponse("<h1>Error 404: Entry not found</h1>")
+
         return render(request, "encyclopedia/edit.html", {
             "title": title,
-            "form": EditForm,
+            "form": EditForm({"content": entry}),
         })
+
+    # Edit database record based on request
+    form = EditForm(request.POST)
+
+    if form.is_valid():
+        content = form.cleaned_data["content"].encode()
+
+        util.save_entry(title, content)
+
+        return HttpResponseRedirect(reverse("wiki", args=[title]))
+
+    return HttpResponse("<h1>Error 500: Form invalid</h1>")
 
 
 def search(request):
@@ -99,7 +121,7 @@ def search(request):
 def wiki(request, title):
     entry = util.get_entry(title)
 
-    # If get_entry returns none then it doesn't exist
+    # Ensure entry exists
     if not entry:
         return HttpResponse("<h1>Error 404: Entry not found</h1>")
 
