@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <a href="/edit/{{ title }}/"><button type="submit">Edit</button></a>
+    <a href="{% url 'edit' title %}"><button type="submit">Edit</button></a>
 
     {{entry | safe}}
 {% endblock %}

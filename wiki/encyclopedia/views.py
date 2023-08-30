@@ -1,4 +1,5 @@
 import markdown2
+import random
 
 from django.forms import Form, CharField, widgets
 from django.shortcuts import render
@@ -20,31 +21,35 @@ class SearchForm(Form):
 class NewEntryForm(Form):
     title = CharField(
         widget=widgets.TextInput(
-        attrs={'placeholder': 'Title',
-               'style': 'width: 80%'}
-        ),
+            attrs={'placeholder': 'Title',
+                'style': 'width: 80%'}),
         label="")
+
     content = CharField(
         widget=widgets.Textarea(
-        attrs={'rows': '3',
-               'placeholder': 'Content',}
-        ),
+            attrs={'rows': '3',
+                'placeholder': 'Content',}),
         label="")
 
 
 def index(request):
+    """ Display homepage """
+
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(),
     })
 
 
 def add(request):
+    """ Add new entry to wiki """
 
+    # Render new entry page
     if request.method == "GET":
         return render(request, "encyclopedia/add.html", {
             "form": NewEntryForm
         })
     
+    # Add new entry to database
     form = NewEntryForm(request.POST)
 
     if form.is_valid():
@@ -62,6 +67,7 @@ def add(request):
 
 
 def edit(request, title):
+    """ Edit existing wiki entry """
 
     # Render edit page with entry data pre-loaded
     if request.method == "GET":
@@ -89,7 +95,13 @@ def edit(request, title):
     return HttpResponse("<h1>Error 500: Form invalid</h1>")
 
 
+def random_page(request):
+    titles = util.list_entries()
+
+    return HttpResponseRedirect(reverse("wiki", args=[random.choice(titles)]))
+
 def search(request):
+    """ Search wiki entries """
 
     if request.method == "GET":
         return HttpResponseRedirect(reverse("index"))
@@ -119,6 +131,8 @@ def search(request):
     
 
 def wiki(request, title):
+    """ Display wiki entry """
+
     entry = util.get_entry(title)
 
     # Ensure entry exists
