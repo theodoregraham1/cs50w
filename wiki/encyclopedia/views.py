@@ -96,9 +96,12 @@ def edit(request, title):
 
 
 def random_page(request):
+    """ Display random entry """
+
     titles = util.list_entries()
 
     return HttpResponseRedirect(reverse("wiki", args=[random.choice(titles)]))
+
 
 def search(request):
     """ Search wiki entries """
