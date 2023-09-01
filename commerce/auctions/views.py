@@ -3,9 +3,25 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.forms import ModelForm, Textarea, URLInput, TextInput, NumberInput, Select
 
-from .models import User
+from .models import User, Listing, Bid, Comment
 
+
+class AddListingForm(ModelForm):
+
+
+    class Meta:
+        model = Listing
+        fields = ["title", "description", "starting_bid", "image_url", "category", "user_id"]
+        widgets = {
+            "title": TextInput(attrs={"class": "form-control", "placeholder": "Title"}),
+            "description": Textarea(attrs={"class": "form-control"}),
+            "starting_bid": NumberInput(attrs={"class": "form-control"}),
+            "image_url": URLInput(attrs={"class": "form-control"}),
+            "category": TextInput(attrs={"class": "form-control"}),
+            "user_id": Select(attrs={"class": "form-control"}),
+        }
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -65,4 +81,8 @@ def register(request):
 
 def add(request):
     if request.method != "POST":
-        return render(request, "auctions/add.html")
+        return render(request, "auctions/add.html", {
+            "form": AddListingForm
+        })
+    
+

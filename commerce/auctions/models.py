@@ -13,8 +13,8 @@ class Listing(models.Model):
     category = models.CharField(max_length=64, null=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
 
-
 class Bid(models.Model):
     pass
+
 class Comment(models.Model):
     pass 
