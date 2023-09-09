@@ -9,18 +9,21 @@ from .models import User, Listing, Bid, Comment
 
 
 class AddListingForm(ModelForm):
-
-
     class Meta:
         model = Listing
-        fields = ["title", "description", "starting_bid", "image_url", "category", "user_id"]
+        fields = ["title", "description", "starting_bid", "image_url", "category",]
+
         widgets = {
-            "title": TextInput(attrs={"class": "form-control", "placeholder": "Title"}),
-            "description": Textarea(attrs={"class": "form-control"}),
-            "starting_bid": NumberInput(attrs={"class": "form-control"}),
-            "image_url": URLInput(attrs={"class": "form-control"}),
-            "category": TextInput(attrs={"class": "form-control"}),
-            "user_id": Select(attrs={"class": "form-control"}),
+            "title": TextInput(attrs={"class": "form-control", 
+                                      "placeholder": "Title",}),
+            "description": Textarea(attrs={"class": "form-control", 
+                                           "placeholder": "Description",}),
+            "starting_bid": NumberInput(attrs={"class": "form-control", 
+                                               "placeholder": "Starting Bid",}),
+            "image_url": URLInput(attrs={"class": "form-control", 
+                                         "placeholder": "Image",},),
+            "category": TextInput(attrs={"class": "form-control", 
+                                         "placeholder": "Category",}),
         }
 
 def index(request):
@@ -84,5 +87,16 @@ def add(request):
         return render(request, "auctions/add.html", {
             "form": AddListingForm
         })
+
+    form = AddListingForm(request.POST)
+
+    if form.is_valid():
+
+        listing = form.cleaned_data
+
+        listing.update({"user_id": request.user.id})
+        
+    return HttpResponseRedirect(reverse("add"))
+
     
 

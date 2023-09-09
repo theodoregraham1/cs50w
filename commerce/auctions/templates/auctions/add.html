@@ -1,33 +1,35 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <form action="/add/" method="post" class="form container">
-        {% csrf_token %}
-        <div class="col-6 ms-1">
-            <div class="my-3">
-                {{ form.title }}
-            </div>
+    <h2 class="my-3">Create Listing</h2>
 
-            <div class="my-3 mx-3">
-                {{ form.description }}
-            </div>
+    <div class="col-lg-5">
+        <form action="{% url 'add' %}" method="post" class="form">
+            {% csrf_token %}
+            <div class="">
+                <div class="my-3">
+                    {{ form.title }}
+                </div>
 
-            <div class="my-3 mx-3">
-                {{ form.starting_bid }}
-            </div>
+                <div class="my-3">
+                    {{ form.description }}
+                </div>
 
-            <div class="my-3 mx-3">
-                {{ form.image_url }}
-            </div>
+                <div class="my-3">
+                    {{ form.starting_bid }}
+                </div>
 
-            <div class="my-3 mx-3">
-                {{ form.category}}
-            </div>
+                <div class="my-3">
+                    {{ form.image_url }}
+                </div>
 
-            <div class="my-3 mx-3">
-                {{ form.user_id }}
+                <div class="my-3">
+                    {{ form.category}}
+                </div>
+
+                <input type="submit" class="form-input btn btn-primary">
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
 {% endblock %}
