@@ -6,29 +6,27 @@
     <div class="col-lg-5">
         <form action="{% url 'add' %}" method="post" class="form">
             {% csrf_token %}
-            <div class="">
-                <div class="my-3">
-                    {{ form.title }}
-                </div>
-
-                <div class="my-3">
-                    {{ form.description }}
-                </div>
-
-                <div class="my-3">
-                    {{ form.starting_bid }}
-                </div>
-
-                <div class="my-3">
-                    {{ form.image_url }}
-                </div>
-
-                <div class="my-3">
-                    {{ form.category}}
-                </div>
-
-                <input type="submit" class="form-input btn btn-primary">
+            <div class="my-3">
+                {{ form.title }}
             </div>
+
+            <div class="my-3">
+                {{ form.description }}
+            </div>
+
+            <div class="my-3">
+                {{ form.starting_bid }}
+            </div>
+
+            <div class="my-3">
+                {{ form.image_url }}
+            </div>
+
+            <div class="my-3">
+                {{ form.category}}
+            </div>
+            <input type="hidden" name="user_id" id="id_user_id" value="{{ user.id }}">
+            <input type="submit" class="form-input btn btn-primary">
         </form>
     </div>
 

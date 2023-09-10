@@ -3,12 +3,19 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.forms import ModelForm, Textarea, URLInput, TextInput, NumberInput, Select
+from django.forms import ModelForm, Textarea, URLInput, TextInput, NumberInput, URLField, CharField
 
 from .models import User, Listing, Bid, Comment
 
 
 class AddListingForm(ModelForm):
+    image_url = URLField(required=False, 
+                         widget=URLInput(attrs={"class": "form-control", 
+                                                "placeholder": "Image",},))
+    category = CharField(required=False, 
+                         widget=TextInput(attrs={"class": "form-control", 
+                                         "placeholder": "Category",}))
+
     class Meta:
         model = Listing
         fields = ["title", "description", "starting_bid", "image_url", "category",]
@@ -20,14 +27,14 @@ class AddListingForm(ModelForm):
                                            "placeholder": "Description",}),
             "starting_bid": NumberInput(attrs={"class": "form-control", 
                                                "placeholder": "Starting Bid",}),
-            "image_url": URLInput(attrs={"class": "form-control", 
-                                         "placeholder": "Image",},),
-            "category": TextInput(attrs={"class": "form-control", 
-                                         "placeholder": "Category",}),
         }
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.all()
+
+    return render(request, "auctions/index.html", {
+        "listings": listings,
+    })
 
 
 def login_view(request):
@@ -92,11 +99,14 @@ def add(request):
 
     if form.is_valid():
 
-        listing = form.cleaned_data
+        listing = form.save()
 
-        listing.update({"user_id": request.user.id})
+        return HttpResponseRedirect(reverse("index"))
+
         
-    return HttpResponseRedirect(reverse("add"))
+    return render(request, "auctions/add.html", {
+            "form": form
+        })
 
     
 
