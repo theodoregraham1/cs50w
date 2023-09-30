@@ -4,6 +4,26 @@
     <h2>Active Listings</h2>
 
     {% for listing in listings %}
-        hello
+        <hr>
+        <div class="row" style="height:320px">
+            <div class="col-md-4">
+                <div class="mx-auto">
+                    {% if listing.image_url %}
+                        <img class="img-class mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}" style="height:320px; width:auto">
+                    {% else %}
+                        <h2>No image found</h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div>
+                    <h5 class="">{{listing.title}}</h5>
+                </div>
+                <div>
+                    <p class="">{{listing.description}}</p>
+                </div>
+            </div>
+        </div>
     {% endfor %}
+    
 {% endblock %}
