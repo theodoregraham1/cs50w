@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
 
 from .forms import AddListingForm
 from .models import User, Listing, Bid, Comment
@@ -29,9 +30,8 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            messages.error(request, "Invalid username and/or password.")
+            return render(request, "auctions/login.html")
     else:
         return render(request, "auctions/login.html")
 
@@ -50,18 +50,17 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+            messages.error(request, "Passwords must match.")
+            return render(request, "auctions/register.html")
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
+            messages.error(request, "Username already taken.")
+            return render(request, "auctions/register.html")
+        
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -78,11 +77,13 @@ def add(request):
 
     if form.is_valid():
 
-        listing = form.save()
+        form.save()
+
+        messages.success(request, 'Listing created successfully')
 
         return HttpResponseRedirect(reverse("index"))
 
-        
+    messages.error(request, "New listing invalid.")
     return render(request, "auctions/add.html", {
             "form": form
         })

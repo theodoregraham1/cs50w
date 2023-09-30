@@ -2,6 +2,22 @@ body {
     padding: 10px;
 }
 
-.img-class {
+.img-div {
+    align-items: center;
+    justify-content: center;
+}
+
+.listing-img {
     height: 320px;
+    width:auto;
+}
+
+.listing-row {
+    height: 320px;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }

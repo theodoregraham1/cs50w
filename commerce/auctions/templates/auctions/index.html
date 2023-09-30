@@ -1,17 +1,17 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2 class="mx-auto mt-3">Active Listings</h2>
+    <hr>
 
     {% for listing in listings %}
-        <hr>
-        <div class="row" style="height:320px">
+        <div class="listing-row row">
             <div class="col-md-4">
-                <div class="mx-auto">
+                <div class="d-flex align-items-center">
                     {% if listing.image_url %}
-                        <img class="img-class mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}" style="height:320px; width:auto">
+                        <img class="listing-img mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
                     {% else %}
-                        <h2>No image found</h2>
+                        <h2 class="mx-auto">No image found</h2>
                     {% endif %}
                 </div>
             </div>
@@ -22,8 +22,12 @@
                 <div>
                     <p class="">{{listing.description}}</p>
                 </div>
+                <div>
+                    <p><Strong>Category: </Strong>{{listing.category}}</p>
+                </div>
             </div>
         </div>
+        <hr>
     {% endfor %}
     
 {% endblock %}
