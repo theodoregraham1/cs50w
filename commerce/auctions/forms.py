@@ -12,7 +12,7 @@ class AddListingForm(ModelForm):
 
     class Meta:
         model = Listing
-        fields = ["title", "description", "starting_bid", "image_url", "category", "user_id"]
+        fields = ["title", "description", "starting_bid", "image_url", "category", "user"]
 
         widgets = {
             "title": TextInput(attrs={"class": "form-control", 
@@ -27,3 +27,4 @@ class AddListingForm(ModelForm):
 class AddBidForm(ModelForm):
     class Meta:
         model = Bid
+        fields = ["value", "listing", "user"]

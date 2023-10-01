@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .forms import AddListingForm
+from .forms import AddListingForm, AddBidForm
 from .models import User, Listing, Bid, Comment
 
 
@@ -88,5 +88,9 @@ def add(request):
             "form": form
         })
 
-    
 
+def listing_view(request, id) :
+    if request.method != "POST":
+        return render(request, "auctions/listing.html", {
+            "form": AddBidForm
+        })
