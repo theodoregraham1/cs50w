@@ -6,26 +6,31 @@
 
     {% for listing in listings %}
         <div class="listing-row row">
+            <a href="{% url 'listing' listing.id %}"></a>
             <div class="col-md-4">
-                <div class="d-flex align-items-center">
-                    {% if listing.image_url %}
-                        <img class="listing-img mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
-                    {% else %}
-                        <h2 class="mx-auto">No image found</h2>
-                    {% endif %}
+                    <div class="d-flex align-items-center">
+                        {% if listing.image_url %}
+                            <img class="listing-img mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
+                        {% else %}
+                            <h2 class="mx-auto">No image found</h2>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-8">
-                <div>
-                    <h5 class="">{{listing.title}}</h5>
+                <div class="col-md-8">
+                    <div>
+                        <h5 class="">{{listing.title}}</h5>
+                    </div>
+                    <div>
+                        <p class="">{{listing.description}}</p>
+                    </div>
+                    <div>
+                        <p><Strong>Category: </Strong>{{listing.category}}</p>
+                    </div>
+                    <div>
+                        <p><Strong>Current price: </Strong>£{{listing.starting_bid}}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="">{{listing.description}}</p>
-                </div>
-                <div>
-                    <p><Strong>Category: </Strong>{{listing.category}}</p>
-                </div>
-            </div>
+            </a>
         </div>
         <hr>
     {% endfor %}

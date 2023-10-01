@@ -22,3 +22,8 @@ class AddListingForm(ModelForm):
             "starting_bid": NumberInput(attrs={"class": "form-control", 
                                                "placeholder": "Starting Bid",}),
         }
+
+
+class AddBidForm(ModelForm):
+    class Meta:
+        model = Bid
