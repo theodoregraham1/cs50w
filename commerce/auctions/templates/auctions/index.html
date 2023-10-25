@@ -23,7 +23,7 @@
                     <p class="">{{listing.description}}</p>
                 </div>
                 <div>
-                    <p><Strong>Category: </Strong>{{listing.category}}</p>
+                    <p><Strong>Category: </Strong>{% if listing.category %} {{listing.category}} {% else %} N/A {% endif %}</p>
                 </div>
                 <div>
                     <p><Strong>Current price: </Strong>£{{listing.starting_bid}}</p>
