@@ -83,7 +83,6 @@ def add(request):
         form.save()
 
         messages.success(request, 'Listing created successfully')
-
         return HttpResponseRedirect(reverse("index"))
 
     messages.error(request, "New listing invalid.")
@@ -97,6 +96,7 @@ def listing_view(request, id):
         listing = Listing.objects.get(id=id)
 
         return render(request, "auctions/listing.html", {
+            "watchlisted": (listing in request.user.watchlist.all()),
             "listing": listing,
             "form": AddBidForm,
         })
@@ -106,7 +106,13 @@ def listing_view(request, id):
 
 @decorators.login_required
 def watchlist(request, id):
-    request.user.watchlist.add(Listing.objects.get(id=id))
+    listing = Listing.objects.get(id=id)
 
-    messages.success(request, "Listing added to watchlist")
+    if (listing not in request.user.watchlist.all()):
+        request.user.watchlist.add(listing)
+        messages.success(request, "Listing added to watchlist")
+    else:
+        request.user.watchlist.remove(listing)
+        messages.info(request, "Listing removed from watchlist")
+
     return HttpResponseRedirect(reverse("listing", args=[id]))
