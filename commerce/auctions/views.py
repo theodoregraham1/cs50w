@@ -110,7 +110,7 @@ def listing_view(request, id):
             "price": utils.gbp(price),
             "listing": listing,
             "form": AddBidForm,
-            "highest_bid": top_bid,
+            "top_bid": top_bid,
             "num_bids": len(listing.bids.all())
         })
     
@@ -121,7 +121,7 @@ def add_bid(request):
         return HttpResponseRedirect(reverse("index"))
     
     form = AddBidForm(request.POST)
-    
+
     if form.is_valid():
         bid = form.cleaned_data
 
