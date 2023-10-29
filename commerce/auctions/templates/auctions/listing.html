@@ -29,12 +29,38 @@
 
         <!-- Description -->
         <div class="row mt-1">
-            <p>{{listing.description}}</p>
+            <p class="fs-3">{{listing.description}}</p>
         </div>
 
         <!-- Price -->
         <div class="row">
-            <h2>{{price}}</h1>
+            <h2>{{price}}</h2>
+        </div>
+        <div class="row">
+            <div class="fs-6">
+                {{num_bids}} bid(s). 
+                {% if top_bid %}{% if top_bid.user.id == user.id %}Your bid is the current bid.{% endif %}{% endif %}
+            </div>
+        </div>
+
+        <!-- Place bid -->
+        <div class="row">
+            <form action="{% url 'add_bid' %}" method="post" class="col-md-12 mt-1">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-3">
+                        {{ form.value }}
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" class="form-input btn btn-primary" value="Place Bid">
+                    </div>
+                </div>
+
+                <input type="hidden" name="user" id="id_user" value="{{ user.id }}">
+                <input type="hidden" name="listing" id="id_listing" value="{{ listing.id }}">
+
+            </form>
         </div>
 
         <!-- Details -->

@@ -27,4 +27,9 @@ class AddListingForm(ModelForm):
 class AddBidForm(ModelForm):
     class Meta:
         model = Bid
-        fields = ["value", "listing", "user"]
+        fields = ["value", "listing", "user",]
+
+        widgets = {
+            "value": TextInput(attrs={"class": "form-control",
+                                      "placeholder": "Bid"}),
+        }

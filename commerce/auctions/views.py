@@ -96,13 +96,10 @@ def listing_view(request, id):
     listing = Listing.objects.get(id=id)
 
     # Determine price
-    if list(listing.bids.all()) != []: 
-        price = max(listing.bids.all())
-    else:
-        price = listing.starting_bid
+    price, top_bid = utils.get_top_bid(listing)
     
     if request.method != "POST":
-        # Determine if user has watchlisted item or not
+        # Determine if item is on user's watchlist
         if not request.user.is_authenticated:
             watchlisted = False
         else:
@@ -113,13 +110,41 @@ def listing_view(request, id):
             "price": utils.gbp(price),
             "listing": listing,
             "form": AddBidForm,
+            "highest_bid": top_bid,
+            "num_bids": len(listing.bids.all())
         })
     
-    # Add bid
+
+@decorators.login_required
+def add_bid(request):
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("index"))
+    
+    form = AddBidForm(request.POST)
+    
+    if form.is_valid():
+        bid = form.cleaned_data
+
+        current_price = utils.get_top_bid(bid["listing"])[0]
+
+        if bid["value"] > current_price or (bid["value"] == bid["listing"].starting_bid and current_price == bid["listing"].starting_bid):
+            form.save()
+
+            messages.success(request, "Bid added successfully")
+        else:
+            messages.error(request, "Bid must be above the current bid")
+
+        return HttpResponseRedirect(reverse("listing", args=[bid["listing"].id,]))
+
+    else:
+        messages.error(request, "Bid invalid")
+
+    return HttpResponseRedirect(reverse("index"))
 
 
 @decorators.login_required
 def add_to_watchlist(request, id):
+    # Add or remove item from user's watchlist
     listing = Listing.objects.get(id=id)
 
     if (listing not in request.user.watchlist.all()):
