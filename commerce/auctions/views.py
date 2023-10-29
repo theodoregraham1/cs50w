@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
+from . import utils 
 from .forms import AddListingForm, AddBidForm
 from .models import User, Listing, Bid, Comment
 
@@ -94,14 +95,22 @@ def add(request):
 def listing_view(request, id):
     listing = Listing.objects.get(id=id)
 
-    if not request.user.is_authenticated:
-        return render(request, "auctions/listing.html", {
-            "listing": listing
-        })
+    # Determine price
+    if list(listing.bids.all()) != []: 
+        price = max(listing.bids.all())
+    else:
+        price = listing.starting_bid
     
     if request.method != "POST":
+        # Determine if user has watchlisted item or not
+        if not request.user.is_authenticated:
+            watchlisted = False
+        else:
+            watchlisted = (listing in request.user.watchlist.all())
+
         return render(request, "auctions/listing.html", {
-            "watchlisted": (listing in request.user.watchlist.all()),
+            "watchlisted": watchlisted,
+            "price": utils.gbp(price),
             "listing": listing,
             "form": AddBidForm,
         })
