@@ -92,9 +92,14 @@ def add(request):
 
 
 def listing_view(request, id):
-    if request.method != "POST":
-        listing = Listing.objects.get(id=id)
+    listing = Listing.objects.get(id=id)
 
+    if not request.user.is_authenticated:
+        return render(request, "auctions/listing.html", {
+            "listing": listing
+        })
+    
+    if request.method != "POST":
         return render(request, "auctions/listing.html", {
             "watchlisted": (listing in request.user.watchlist.all()),
             "listing": listing,
@@ -105,7 +110,7 @@ def listing_view(request, id):
 
 
 @decorators.login_required
-def watchlist(request, id):
+def add_to_watchlist(request, id):
     listing = Listing.objects.get(id=id)
 
     if (listing not in request.user.watchlist.all()):
@@ -116,3 +121,10 @@ def watchlist(request, id):
         messages.info(request, "Listing removed from watchlist")
 
     return HttpResponseRedirect(reverse("listing", args=[id]))
+
+
+@decorators.login_required
+def watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": request.user.watchlist.all()
+    })

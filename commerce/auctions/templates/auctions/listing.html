@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="mx-3">
+        <div class="row mt-3">
+            <h1 class=""><b>Listing:</b> {{listing.title}}</h1>
+        </div>
+
+        <div class="row">
+            {% if user.is_authenticated %}
+                {% if watchlisted %}
+                    <a href="{% url 'add_to_watchlist' listing.id %}" class="btn btn-secondary">Remove from watchlist</a>
+                {% else %}
+                    <a href="{% url 'add_to_watchlist' listing.id %}" class="btn btn-primary">Add to watchlist</a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="row mt-3">
+            {% if listing.image_url %}
+                <img class="listing-img" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
+            {% else %}
+                <h4 class="">No image found</h2>
+            {% endif %}
+        </div>
+
+        <div class="row mt-1">
+            <p>{{listing.description}}</p>
+        </div>
+
+        <div class="row">
+            <p><b>Details: </b></p>
+            <ul>
+                <li><b>Category: </b>{{listing.category}}</li>
+                <li><b>Seller: </b>{{listing.user}}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}1
