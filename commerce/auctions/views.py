@@ -17,6 +17,9 @@ def index(request):
     for l in raw_listings:
         listings.append(utils.produce_listing(request.user, l))
 
+    listings.sort(key=lambda l: l["listing"].id)
+    listings.reverse()
+
     return render(request, "auctions/index.html", {
         "listings": listings,
     })
@@ -162,6 +165,9 @@ def watchlist(request):
 
         if new_listing["watchlisted"]:
             listings.append(new_listing)
+            
+    listings.sort(key=lambda l: l["listing"].id)
+    listings.reverse()
 
     return render(request, "auctions/watchlist.html", {
         "listings": listings
