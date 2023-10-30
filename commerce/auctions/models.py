@@ -28,4 +28,8 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
+
+    text = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
  
