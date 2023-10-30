@@ -78,7 +78,8 @@ def add(request):
         })
 
     form = AddListingForm(request.POST)
-
+    
+    print(form)
     if form.is_valid():
 
         form.save()
@@ -162,3 +163,15 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist": request.user.watchlist.all()
     })
+
+@decorators.login_required
+def close(request, id):
+    listing = Listing.objects.get(id=id)
+
+    if listing.user == request.user:
+        listing.active = False
+        messages.warning(request, "Listing closed successfully")
+    else:
+        messages.error(request, "You are not the owner of this listing")
+    
+    return HttpResponseRedirect(reverse("listing", args=[id,]))

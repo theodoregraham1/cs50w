@@ -16,6 +16,7 @@ class Listing(models.Model):
     image_url = models.URLField(null=True)
     category = models.CharField(max_length=64, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
+    active = models.BooleanField(default=True)
 
 
 class Bid(models.Model):
