@@ -170,6 +170,7 @@ def close(request, id):
 
     if listing.user == request.user:
         listing.active = False
+        listing.save()
         messages.warning(request, "Listing closed successfully")
     else:
         messages.error(request, "You are not the owner of this listing")

@@ -4,16 +4,29 @@
     <div class="mx-3">
         <!-- Title -->
         <div class="row mt-3">
-            <h1 class=""><b>Listing:</b> {{listing.title}}</h1>
+            <h1 class="">
+                <b>Listing:</b> {{listing.title}} 
+                
+            </h1>
         </div>
         
-        <!-- Watchlist button -->
+        <!-- Badges -->
         <div class="row">
+            {% if not listing.active %}
+                <span class="badge badge-warning mx-1">Closed</span> 
+                {% if top_bid.user == user %}
+                    <span class="badge badge-success mx-1">Won</span>
+                {% endif %}
+            {% endif %}
+
             {% if user.is_authenticated %}
+                {% if listing.user == user %} 
+                    <span class="badge badge-success mx-1">Yours</span>
+                {% endif %}
                 {% if watchlisted %}
-                    <a href="{% url 'add_to_watchlist' listing.id %}" class="btn btn-secondary">Remove from watchlist</a>
+                    <a href="{% url 'add_to_watchlist' listing.id %}" class="badge badge-secondary">Remove from watchlist</a>
                 {% else %}
-                    <a href="{% url 'add_to_watchlist' listing.id %}" class="btn btn-primary">Add to watchlist</a>
+                    <a href="{% url 'add_to_watchlist' listing.id %}" class="badge badge-primary">Add to watchlist</a>
                 {% endif %}
             {% endif %}
         </div>
@@ -22,8 +35,6 @@
         <div class="row mt-3">
             {% if listing.image_url %}
                 <img class="listing-img" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
-            {% else %}
-                <h4 class="">No image found</h2>
             {% endif %}
         </div>
 
@@ -37,14 +48,25 @@
             <h2>{{price}}</h2>
         </div>
         <div class="row">
-            <div class="fs-6">
-                {{num_bids}} bid(s). 
-                {% if user == listing.user %} This is your listing.
-                {% elif top_bid %}{% if top_bid.user.id == user.id %}Your bid is the current bid.{% endif %}{% endif %}
+            <div class="small font-weight-bold">
+                {% if listing.active %}
+                    {{num_bids}} bid(s). 
+                    {% if top_bid %}
+                        {% if top_bid.user.id == user.id %}Your bid is the current bid.{% endif %}
+                    {% endif %}
+                {% else %} 
+                    This listing is closed. 
+                    {% if top_bid %}
+                        {% if top_bid.user.id == user.id %}You have won the auction.{% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if user == listing.user %} 
+                    This is your listing.
+                {% endif %}
             </div>
         </div>
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.active%}
             <div class="row">
                 {% if user != listing.user%}
                     <!-- Place bid -->
@@ -64,9 +86,11 @@
                             <input type="hidden" name="listing" id="id_listing" value="{{ listing.id }}">
 
                         </form>
+
                 {% else %}
                     <!-- Close listing button -->
-                    <a href="{% url 'close' listing.id %}" class="btn btn-warning">Close listing</a>
+                    <a href="{% url 'close' listing.id %}" class="btn btn-warning mt-3">Close listing</a>
+
                 {% endif %}
             </div>
         {% endif %}
