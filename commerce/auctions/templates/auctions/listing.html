@@ -111,9 +111,23 @@
                 <h3>Comments: </h3>
         </div>
         <div class="row mt-3">
-            <form action="url comment" method="post">
-                    
-            </form>
+            <span class="border col-md-6">
+                <form action="{% url 'comment' %}" method="post" class="m-3">
+                    <h5>New comment:</h5>
+                    {% csrf_token %}
+
+                    <div class="row">
+                        {{ comment_form.text }}
+                    </div>
+                    <div class="row">
+                        <input type="submit" class="form-input btn btn-primary mt-1" value="Comment">
+                    </div>
+
+                    <input type="hidden" name="user" id="id_user" value="{{ user.id }}">
+                    <input type="hidden" name="listing" id="id_listing" value="{{ listing.id }}">
+
+                </form>
+            </span>
         </div>
         <div class="row mt-3">
             {% if comments %}

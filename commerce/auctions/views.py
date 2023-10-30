@@ -165,7 +165,7 @@ def watchlist(request):
 
         if new_listing["watchlisted"]:
             listings.append(new_listing)
-            
+
     listings.sort(key=lambda l: l["listing"].id)
     listings.reverse()
 
@@ -186,3 +186,23 @@ def close(request, id):
         messages.error(request, "You are not the owner of this listing")
     
     return HttpResponseRedirect(reverse("listing", args=[id,]))
+
+@decorators.login_required
+def comment(request):
+    if request.method != "post":
+        return HttpResponseRedirect(reverse("index"))
+
+    form = AddCommentForm(request.POST)
+    print(form)
+    if form.is_valid():
+        form.save()
+
+        messages.success("Comment added successfully")
+        return HttpResponseRedirect(reverse("listing", args=[form.cleaned_data["listing"].id]))
+
+    messages.error("Comment invalid")
+    try:
+        id = form.cleaned_data["listing"].id
+        return HttpResponseRedirect(reverse("listing", args=[id]))
+    except: 
+        return HttpResponseRedirect(reverse("index"))
