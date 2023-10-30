@@ -75,7 +75,7 @@
 
                             <div class="row">
                                 <div class="col-md-3">
-                                    {{ form.value }}
+                                    {{ bid_form.value }}
                                 </div>
                                 <div class="col-md-3">
                                     <input type="submit" class="form-input btn btn-primary" value="Place Bid">
@@ -105,6 +105,19 @@
         </div>
 
         <!-- Comments -->
-        
+        <hr>
+        <div class="row mt-3">
+                <h3>Comments: </h3>
+        </div>
+        <div class="row mt-3">
+            <form action="url comment" method="post">
+
+            </form>
+        </div>
+        <div class="row mt-3">
+            {% if comments %}
+                <h5>No comments yet</h5>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}1

@@ -11,7 +11,15 @@ from .models import User, Listing, Bid, Comment
 
 
 def index(request):
-    listings = Listing.objects.all()
+    listings = []
+    raw_listings = Listing.objects.all()
+
+    for l in raw_listings:
+        listings.append({
+            "listing": l,
+            "price": utils.gbp(utils.get_top_bid(l)[0]),
+            "watchlisted": (request.user in l.watchers.all())
+        })
 
     return render(request, "auctions/index.html", {
         "listings": listings,
@@ -110,9 +118,10 @@ def listing_view(request, id):
             "watchlisted": watchlisted,
             "price": utils.gbp(price),
             "listing": listing,
-            "form": AddBidForm,
+            "bid_form": AddBidForm,
             "top_bid": top_bid,
-            "num_bids": len(listing.bids.all())
+            "num_bids": len(listing.bids.all()),
+            "comments": listing.comments.all()
         })
     
 
@@ -160,8 +169,20 @@ def add_to_watchlist(request, id):
 
 @decorators.login_required
 def watchlist(request):
+    listings = []
+    raw_listings = Listing.objects.all()
+
+    for l in raw_listings:
+        new_listing = {
+            "listing": l,
+            "price": utils.gbp(utils.get_top_bid(l)[0]),
+            "watchlisted": (request.user in l.watchers.all())
+        }
+        if new_listing["watchlisted"]:
+            listings.append(new_listing)
+
     return render(request, "auctions/watchlist.html", {
-        "watchlist": request.user.watchlist.all()
+        "listings": listings
     })
 
 @decorators.login_required

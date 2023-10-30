@@ -33,3 +33,15 @@ class AddBidForm(ModelForm):
             "value": TextInput(attrs={"class": "form-control",
                                       "placeholder": "Bid"}),
         }
+
+
+class AddCommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["text", "listing", "user"]
+
+        widgets = {
+            "text": Textarea(attrs={"class": "form-control",
+                                      "placeholder": "Text"}),
+        }
+        
