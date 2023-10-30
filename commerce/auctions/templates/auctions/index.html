@@ -5,32 +5,34 @@
     <hr>
 
     {% for listing in listings %}
-        <div class="listing-row row">
-            <div class="col-md-4">
-                <div class="d-flex align-items-center">
-                    {% if listing.image_url %}
-                        <img class="listing-img mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
-                    {% else %}
-                        <h2 class="mx-auto">No image found</h2>
-                    {% endif %}
+        {% if listing.active %}
+            <div class="listing-row row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        {% if listing.image_url %}
+                            <img class="listing-img mx-auto" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
+                        {% else %}
+                            <h2 class="mx-auto">No image found</h2>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <a href="{% url 'listing' listing.id %}">
+                        <h5 class="">{{listing.title}}</h5>
+                    </a>
+                    <div>
+                        <p class="">{{listing.description}}</p>
+                    </div>
+                    <div>
+                        <p><Strong>Category: </Strong>{% if listing.category %} {{listing.category}} {% else %} N/A {% endif %}</p>
+                    </div>
+                    <div>
+                        <p><Strong>Current price: </Strong>£{{listing.starting_bid}}</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <a href="{% url 'listing' listing.id %}">
-                    <h5 class="">{{listing.title}}</h5>
-                </a>
-                <div>
-                    <p class="">{{listing.description}}</p>
-                </div>
-                <div>
-                    <p><Strong>Category: </Strong>{% if listing.category %} {{listing.category}} {% else %} N/A {% endif %}</p>
-                </div>
-                <div>
-                    <p><Strong>Current price: </Strong>£{{listing.starting_bid}}</p>
-                </div>
-            </div>
-        </div>
-        <hr>
+            <hr>
+        {% endif %}
     {% endfor %}
     
 {% endblock %}
