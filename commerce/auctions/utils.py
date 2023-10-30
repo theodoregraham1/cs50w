@@ -12,3 +12,13 @@ def get_top_bid(listing):
         price = listing.starting_bid
 
     return price, top_bid
+
+
+def produce_listing(user, l):
+    price, top_bid = get_top_bid(l)
+    return {
+            "listing": l,
+            "price": gbp(price),
+            "top_bid": top_bid,
+            "watchlisted": (user in l.watchers.all()),
+        }

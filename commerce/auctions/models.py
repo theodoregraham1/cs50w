@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from datetime import datetime
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
@@ -15,8 +16,10 @@ class Listing(models.Model):
     starting_bid = models.IntegerField()
     image_url = models.URLField(null=True, blank=True, max_length=400)
     category = models.CharField(max_length=64, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     active = models.BooleanField(default=True)
+    time = models.DateTimeField(default=datetime.now())
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
 
 
 class Bid(models.Model):

@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from . import utils 
-from .forms import AddListingForm, AddBidForm
+from .forms import AddListingForm, AddBidForm, AddCommentForm
 from .models import User, Listing, Bid, Comment
 
 
@@ -15,11 +15,7 @@ def index(request):
     raw_listings = Listing.objects.all()
 
     for l in raw_listings:
-        listings.append({
-            "listing": l,
-            "price": utils.gbp(utils.get_top_bid(l)[0]),
-            "watchlisted": (request.user in l.watchers.all())
-        })
+        listings.append(utils.produce_listing(request.user, l))
 
     return render(request, "auctions/index.html", {
         "listings": listings,
@@ -102,27 +98,16 @@ def add(request):
 
 
 def listing_view(request, id):
-    listing = Listing.objects.get(id=id)
+    listing = utils.produce_listing(request.user, Listing.objects.get(id=id))
+    output = {
+        "bid_form": AddBidForm,
+        "comment_form": AddCommentForm,
+        "num_bids": len(listing["listing"].bids.all()),
+        "comments": listing["listing"].comments.all(),
+    }
+    output.update(listing)
 
-    # Determine price
-    price, top_bid = utils.get_top_bid(listing)
-    
-    if request.method != "POST":
-        # Determine if item is on user's watchlist
-        if not request.user.is_authenticated:
-            watchlisted = False
-        else:
-            watchlisted = (listing in request.user.watchlist.all())
-
-        return render(request, "auctions/listing.html", {
-            "watchlisted": watchlisted,
-            "price": utils.gbp(price),
-            "listing": listing,
-            "bid_form": AddBidForm,
-            "top_bid": top_bid,
-            "num_bids": len(listing.bids.all()),
-            "comments": listing.comments.all()
-        })
+    return render(request, "auctions/listing.html", output)
     
 
 @decorators.login_required
@@ -173,17 +158,15 @@ def watchlist(request):
     raw_listings = Listing.objects.all()
 
     for l in raw_listings:
-        new_listing = {
-            "listing": l,
-            "price": utils.gbp(utils.get_top_bid(l)[0]),
-            "watchlisted": (request.user in l.watchers.all())
-        }
+        new_listing = utils.produce_listing(request.user, l)
+
         if new_listing["watchlisted"]:
             listings.append(new_listing)
 
     return render(request, "auctions/watchlist.html", {
         "listings": listings
     })
+
 
 @decorators.login_required
 def close(request, id):
