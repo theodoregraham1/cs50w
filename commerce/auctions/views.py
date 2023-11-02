@@ -7,17 +7,17 @@ from django.contrib import messages
 
 from . import utils 
 from .forms import AddListingForm, AddBidForm, AddCommentForm
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing
 
 
 def index(request):
     listings = []
     raw_listings = Listing.objects.all()
 
-    for l in raw_listings:
-        listings.append(utils.produce_listing(request.user, l))
+    for listing in raw_listings:
+        listings.append(utils.produce_listing(request.user, listing))
 
-    listings.sort(key=lambda l: l["listing"].id)
+    listings.sort(key=lambda listing: listing["listing"].id)
     listings.reverse()
 
     return render(request, "auctions/index.html", {
