@@ -23,11 +23,14 @@
                 {% if listing.user == user %} 
                     <span class="badge badge-success mx-1">Yours</span>
                 {% endif %}
-                {% if watchlisted %}
-                    <a href="{% url 'add_to_watchlist' listing.id %}" class="badge badge-secondary">Remove from watchlist</a>
-                {% else %}
-                    <a href="{% url 'add_to_watchlist' listing.id %}" class="badge badge-primary">Add to watchlist</a>
-                {% endif %}
+
+                <a href="{% url 'add_to_watchlist' listing.id %}"
+                    {% if watchlisted %}
+                        class="badge badge-secondary">Remove from watchlist
+                    {% else %}
+                        class="badge badge-primary">Add to watchlist
+                    {% endif %}
+                </a>
             {% endif %}
         </div>
 
@@ -37,6 +40,7 @@
                 <img class="listing-img" src="{{listing.image_url}}" alt="Image for listing: {{listing.title}}">
             {% endif %}
         </div>
+        <hr>
 
         <!-- Description -->
         <div class="row mt-1">
@@ -131,6 +135,17 @@
         </div>
         <div class="row mt-3">
             {% if comments %}
+                {% for comment in comments %}
+                    <span class="border col-md-6">
+                        <h5 class="mt-3">
+                            {{ comment.user }}:
+                        </h5>
+                        <p>
+                            {{ comment.text }}
+                        </p>
+                    </span>
+                {% endfor %}
+            {% else %}
                 <h5>No comments yet</h5>
             {% endif %}
         </div>

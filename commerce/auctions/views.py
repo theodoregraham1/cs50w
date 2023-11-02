@@ -125,7 +125,8 @@ def add_bid(request):
 
         current_price = utils.get_top_bid(bid["listing"])[0]
 
-        if bid["value"] > current_price or (bid["value"] == bid["listing"].starting_bid and current_price == bid["listing"].starting_bid):
+        if (bid["value"] > current_price
+                or (bid["value"] == bid["listing"].starting_bid and current_price == bid["listing"].starting_bid)):
             form.save()
 
             messages.success(request, "Bid added successfully")
@@ -145,7 +146,7 @@ def add_to_watchlist(request, id):
     # Add or remove item from user's watchlist
     listing = Listing.objects.get(id=id)
 
-    if (listing not in request.user.watchlist.all()):
+    if listing not in request.user.watchlist.all():
         request.user.watchlist.add(listing)
         messages.success(request, "Listing added to watchlist")
     else:
@@ -187,22 +188,22 @@ def close(request, id):
     
     return HttpResponseRedirect(reverse("listing", args=[id,]))
 
+
 @decorators.login_required
 def comment(request):
-    if request.method != "post":
+    if request.method != "POST":
         return HttpResponseRedirect(reverse("index"))
 
     form = AddCommentForm(request.POST)
-    print(form)
+
     if form.is_valid():
         form.save()
 
-        messages.success("Comment added successfully")
+        messages.success(request, "Comment added successfully")
         return HttpResponseRedirect(reverse("listing", args=[form.cleaned_data["listing"].id]))
 
-    messages.error("Comment invalid")
+    messages.error(request, "Comment invalid")
     try:
-        id = form.cleaned_data["listing"].id
-        return HttpResponseRedirect(reverse("listing", args=[id]))
-    except: 
+        return HttpResponseRedirect(reverse("listing", args=[form.cleaned_data["listing"].id]))
+    except:
         return HttpResponseRedirect(reverse("index"))
