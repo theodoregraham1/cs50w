@@ -86,7 +86,6 @@ def add(request):
 
     form = AddListingForm(request.POST)
     
-    print(form)
     if form.is_valid():
 
         form.save()
