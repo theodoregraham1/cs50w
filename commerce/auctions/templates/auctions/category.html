@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 class="mt-3"><b>Category:</b> {{ category.name }}</h2>
+    <hr>
+
+    {% for listing in category.listings %}
+        {% if listing.listing.active %}
+            <div class="listing-row row">
+                <!-- Image -->
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        {% if listing.listing.image_url %}
+                            <img class="listing-img mx-auto" src="{{listing.listing.image_url}}" alt="Image for listing: {{listing.listing.title}}">
+                        {% else %}
+                            <h2 class="mx-auto">No image found</h2>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Text -->
+                <div class="col-md-8">
+                    <!-- Title -->
+                    <a href="{% url 'listing' listing.listing.id %}">
+                        <h5>{{listing.listing.title}}</h5>
+                    </a>
+
+                    <!-- Badges -->
+                    <div>
+                        {% if listing.listing.user == user %}
+                            <span class="badge badge-success">Yours</span>
+                        {% endif %}
+                        {% if listing.watchlisted %}
+                            <span class="badge badge-primary">Watchlist</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <p>{{listing.listing.description}}</p>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <p><Strong>Category: </Strong>{% if listing.listing.category %} {{listing.listing.category}} {% else %} None {% endif %}</p>
+                    </div>
+                    <!-- Price -->
+                    <div>
+                        <p><Strong>Current price: </Strong>{{listing.price}}</p>
+                    </div>
+                    <div class="small">Created on {{listing.listing.time}}</div>
+                </div>
+            </div>
+            <hr>
+        {% endif %}
+    {% endfor %}
+    
+{% endblock %}

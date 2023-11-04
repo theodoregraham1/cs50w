@@ -206,3 +206,21 @@ def comment(request):
         return HttpResponseRedirect(reverse("listing", args=[form.cleaned_data["listing"].id]))
     except:
         return HttpResponseRedirect(reverse("index"))
+
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": utils.get_categories(request.user),
+    })
+
+
+def category(request, name):
+    try:
+        category = next(c for c in utils.get_categories(request.user) if c["name"] == name)
+    except StopIteration:
+        return HttpResponseRedirect(reverse("categories"))
+
+    print(category)
+    return render(request, "auctions/category.html", {
+        "category": category,
+    })

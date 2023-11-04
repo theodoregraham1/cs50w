@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-from datetime import datetime
+from django.utils.timezone import now
 
 
 class User(AbstractUser):
@@ -19,7 +18,7 @@ class Listing(models.Model):
     image_url = models.URLField(null=True, blank=True, max_length=400)
     category = models.CharField(max_length=64, null=True, blank=True)
     active = models.BooleanField(default=True)
-    time = models.DateTimeField(default=datetime.now())
+    time = models.DateTimeField(default=now)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
 
