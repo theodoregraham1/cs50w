@@ -220,7 +220,6 @@ def category(request, name):
     except StopIteration:
         return HttpResponseRedirect(reverse("categories"))
 
-    print(category)
     return render(request, "auctions/category.html", {
         "category": category,
     })

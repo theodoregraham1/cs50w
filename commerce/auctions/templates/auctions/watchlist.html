@@ -28,6 +28,9 @@
                     {% if listing.listing.user == user %}
                         <span class="badge badge-success">Yours</span>
                     {% endif %}
+                    {% if not listing.listing.active %}
+                        <span class="badge badge-warning">Closed</span>
+                    {% endif %}
                 </div>
 
                 <!-- Description -->
