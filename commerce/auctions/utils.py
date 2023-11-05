@@ -37,7 +37,7 @@ def get_categories(user):
             i = 0
             found = False
             while i < len(categories) and not found:
-                if listing.category == categories[i]["name"]:
+                if listing.category == categories[i]["name"] and listing.active:
                     categories[i]["size"] += 1
                     categories[i]["listings"].append(produce_listing(user, listing))
                     found = True
