@@ -33,7 +33,7 @@ def get_categories(user):
     categories = []
 
     for listing in listings:
-        if listing.category != "":
+        if listing.category != "" and listing.active:
             i = 0
             found = False
             while i < len(categories) and not found:
